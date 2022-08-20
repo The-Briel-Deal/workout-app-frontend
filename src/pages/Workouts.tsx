@@ -16,7 +16,8 @@ export default () => {
   });
   let data: { id: string; name: string }[] | undefined = [];
   if (userId) {
-    data = trpc.useQuery(["workout.getAll", userId]).data;
+    const resp = trpc.useQuery(["workout.getAll", userId]);
+    data = resp.data;
   } else {
     navigate("/");
   }
@@ -39,6 +40,7 @@ export default () => {
               <Form.Control
                 placeholder="Enter workout name"
                 value={workoutName}
+                isInvalid={false}
                 onChange={(e) => {
                   setWorkoutName(e.target.value);
                 }}

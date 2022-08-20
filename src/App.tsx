@@ -4,6 +4,7 @@ import Workouts from "./pages/Workouts";
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { trpc } from "./utils/trpc";
+import Sets from "./pages/Sets";
 function App() {
   const [queryClient] = useState(() => new QueryClient());
   const [trpcClient] = useState(() =>
@@ -24,6 +25,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/workouts" element={<Workouts />} />
+          <Route path="/workouts/:id" element={<Sets />} />
         </Routes>
       </QueryClientProvider>
     </trpc.Provider>
