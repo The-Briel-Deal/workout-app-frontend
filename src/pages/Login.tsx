@@ -1,6 +1,11 @@
 import { ChangeEvent, useState } from "react";
+import { trpc } from "../utils/trpc";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 export default () => {
+  // const excercises = trpc.useQuery([
+  //   "workout.getAll",
+  //   "0526d478-ea1d-439d-92d3-b23743cb488d",
+  // ]);
   const [loginState, setLoginState] = useState({ email: "", password: "" });
   const formChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const type = e.target.attributes[1].value;
@@ -9,6 +14,9 @@ export default () => {
   };
   return (
     <Container>
+      {/* {excercises.data?.map((excercise) => (
+        <h1>{excercise.name}</h1>
+      ))} */}
       <Row>
         <Col>
           <Form style={{ paddingTop: "40%" }}>
