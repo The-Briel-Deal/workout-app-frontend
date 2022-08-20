@@ -1,22 +1,28 @@
 import { ChangeEvent, useState } from "react";
 import { trpc } from "../utils/trpc";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 export default () => {
-  // const excercises = trpc.useQuery([
-  //   "workout.getAll",
-  //   "0526d478-ea1d-439d-92d3-b23743cb488d",
-  // ]);
   const [loginState, setLoginState] = useState({ email: "", password: "" });
   const formChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const type = e.target.attributes[1].value;
     const value = e.target.value;
     setLoginState({ ...loginState, [type]: value });
   };
+  const { data, refetch: loginRefetch } = trpc.useQuery(
+    ["user.get", { email: loginState.email, password: loginState.password }],
+    { enabled: false }
+  );
+  const navigate = useNavigate();
+  const login = async () => {
+    const data = await loginRefetch();
+    if (data.data) {
+      localStorage.setItem("userId", data.data.id);
+      navigate("/workouts");
+    }
+  };
   return (
     <Container>
-      {/* {excercises.data?.map((excercise) => (
-        <h1>{excercise.name}</h1>
-      ))} */}
       <Row>
         <Col>
           <Form style={{ paddingTop: "40%" }}>
@@ -42,7 +48,7 @@ export default () => {
                 onChange={formChange}
               />
             </Form.Group>
-            <Button variant="primary" onClick={() => {}}>
+            <Button variant="primary" onClick={login}>
               Submit
             </Button>
           </Form>
