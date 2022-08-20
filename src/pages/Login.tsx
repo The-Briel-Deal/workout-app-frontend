@@ -34,12 +34,7 @@ export default () => {
                 onChange={formChange}
               />
             </Form.Group>
-            <Button
-              variant="primary"
-              onClick={() => {
-                console.log(loginState);
-              }}
-            >
+            <Button variant="primary" onClick={() => {}}>
               Submit
             </Button>
           </Form>
