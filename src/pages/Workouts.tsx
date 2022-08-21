@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "react-query";
@@ -14,21 +14,23 @@ export default () => {
       setWorkoutName("");
     },
   });
-  let data: { id: string; name: string }[] | undefined = [];
-  if (userId) {
-    const resp = trpc.useQuery(["workout.getAll", userId]);
-    data = resp.data;
-  } else {
+  if (!userId) {
     navigate("/");
   }
+  const { data } = trpc.useQuery([
+    "workout.getAll",
+    { userId: userId ? userId : "", limit: 10, page: 0 },
+  ]);
   const [workoutName, setWorkoutName] = useState("");
   return (
     <Container>
       <Row>
+        {data?.pages}
         <Col>
           <h1>Workouts</h1>
-          {data?.map((item) => (
+          {data?.items.map((item) => (
             <h3
+              key={item.id}
               onClick={() => {
                 navigate(`/workouts/${item.id}`);
               }}
