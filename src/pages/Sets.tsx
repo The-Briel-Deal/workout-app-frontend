@@ -5,6 +5,12 @@ import { useQueryClient } from "react-query";
 import { trpc } from "../utils/trpc";
 
 export default () => {
+  const utils = trpc.useContext();
+  const { data: excercises } = trpc.useQuery(["excercise.getAll"], {
+    onSuccess(data) {
+      setSetState({ ...setState, excercise: data[0].id });
+    },
+  });
   const [setState, setSetState] = useState({
     weight: "",
     excercise: "",
@@ -12,7 +18,8 @@ export default () => {
   });
   const createSet = trpc.useMutation("set.create", {
     onSuccess() {
-      setSetState({ ...setState, weight: "", excercise: "", reps: "" });
+      setSetState({ ...setState, weight: "", reps: "" });
+      utils.invalidateQueries(["set.getAll"]);
     },
   });
   const formChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,7 +27,6 @@ export default () => {
     const value = e.target.value;
     setSetState({ ...setState, [type]: value });
   };
-  const { data: excercises } = trpc.useQuery(["excercise.getAll"]);
   const { id } = useParams();
   const { data: sets } = trpc.useQuery(["set.getAll", id ? id : ""]);
   return (
@@ -42,6 +48,7 @@ export default () => {
               onChange={(e) => {
                 setSetState({ ...setState, excercise: e.target.value });
               }}
+              value={setState.excercise}
               aria-label="Select Excercise"
               id="excercise"
             >
@@ -57,6 +64,7 @@ export default () => {
           <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label>Weight</Form.Label>
             <Form.Control
+              value={setState.weight}
               onChange={formChange}
               id="weight"
               placeholder="Weight LB"
@@ -64,7 +72,12 @@ export default () => {
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label>Reps</Form.Label>
-            <Form.Control onChange={formChange} id="reps" placeholder="Reps" />
+            <Form.Control
+              value={setState.reps}
+              onChange={formChange}
+              id="reps"
+              placeholder="Reps"
+            />
           </Form.Group>
           <Button
             variant="primary"
@@ -72,8 +85,8 @@ export default () => {
               createSet.mutate({
                 excerciseId: setState.excercise,
                 workoutId: id ? id : "",
-                weightLb: parseInt(setState.weight),
-                reps: parseInt(setState.reps),
+                weightLb: parseInt(setState["weight"]),
+                reps: parseInt(setState["reps"]),
               });
             }}
           >
