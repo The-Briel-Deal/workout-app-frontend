@@ -28,7 +28,13 @@ export default () => {
         <Col>
           <h1>Workouts</h1>
           {data?.map((item) => (
-            <h3>{item.name}</h3>
+            <h3
+              onClick={() => {
+                navigate(`/workouts/${item.id}`);
+              }}
+            >
+              {item.name}
+            </h3>
           ))}
         </Col>
       </Row>
