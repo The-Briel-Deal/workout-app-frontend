@@ -23,9 +23,13 @@ export default () => {
     }
   };
   const signUp = async () => {
-    const data = await loginRefetch();
-    if (data.data) {
-      localStorage.setItem("userId", data.data.id);
+    await signUpMutation.mutate({
+      name: loginState.email,
+      email: loginState.email,
+      password: loginState.password,
+    });
+    if (signUpMutation.data) {
+      localStorage.setItem("userId", signUpMutation.data.id);
       navigate("/workouts");
     }
   };
@@ -64,7 +68,7 @@ export default () => {
             <Button
               variant="primary"
               style={{ margin: "0px 0px 0px 10px" }}
-              onClick={login}
+              onClick={signUp}
             >
               Create Account
             </Button>
