@@ -17,25 +17,36 @@ export default () => {
   if (!userId) {
     navigate("/");
   }
+  const [page, setPage] = useState(1);
   const { data } = trpc.useQuery([
     "workout.getAll",
-    { userId: userId ? userId : "", limit: 10, page: 0 },
+    { userId: userId ? userId : "", limit: 10, page: page - 1 },
   ]);
-  const [page, setPage] = useState(1);
   const [workoutName, setWorkoutName] = useState("");
   return (
     <Container>
       <Row>
         <Col>
-          <h1>Workouts</h1>
+          <h1>Workouts 💪</h1>
+          <h2>Click on any text below to go to that workout!</h2>
           {data?.items.map((item) => (
             <h3
               key={item.id}
+              style={{ cursor: "pointer" }}
               onClick={() => {
                 navigate(`/workouts/${item.id}`);
               }}
             >
-              {item.name}
+              {`${new Date(item.created_at).getHours() % 12 || 12}:${new Date(
+                item.created_at
+              )
+                .getMinutes()
+                .toString()
+                .padStart(2, "0")} ${
+                Math.floor(new Date(item.created_at).getHours() / 12) == 0
+                  ? "AM"
+                  : "PM"
+              }  - ${item.name}`}
             </h3>
           ))}
         </Col>
