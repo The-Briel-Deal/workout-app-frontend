@@ -9,12 +9,20 @@ export default () => {
     const value = e.target.value;
     setLoginState({ ...loginState, [type]: value });
   };
-  const { data, refetch: loginRefetch } = trpc.useQuery(
+  const { refetch: loginRefetch } = trpc.useQuery(
     ["user.get", { email: loginState.email, password: loginState.password }],
     { enabled: false }
   );
+  const signUpMutation = trpc.useMutation("user.create");
   const navigate = useNavigate();
   const login = async () => {
+    const data = await loginRefetch();
+    if (data.data) {
+      localStorage.setItem("userId", data.data.id);
+      navigate("/workouts");
+    }
+  };
+  const signUp = async () => {
     const data = await loginRefetch();
     if (data.data) {
       localStorage.setItem("userId", data.data.id);
@@ -51,7 +59,14 @@ export default () => {
               />
             </Form.Group>
             <Button variant="primary" onClick={login}>
-              Submit
+              Login
+            </Button>
+            <Button
+              variant="primary"
+              style={{ margin: "0px 0px 0px 10px" }}
+              onClick={login}
+            >
+              Create Account
             </Button>
           </Form>
         </Col>

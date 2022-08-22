@@ -29,26 +29,28 @@ export default () => {
         <Col>
           <h1>Workouts 💪</h1>
           <h2>Click on any text below to go to that workout!</h2>
-          {data?.items.map((item) => (
-            <h3
-              key={item.id}
-              style={{ cursor: "pointer" }}
-              onClick={() => {
-                navigate(`/workouts/${item.id}`);
-              }}
-            >
-              {`${new Date(item.created_at).getHours() % 12 || 12}:${new Date(
-                item.created_at
-              )
-                .getMinutes()
-                .toString()
-                .padStart(2, "0")} ${
-                Math.floor(new Date(item.created_at).getHours() / 12) == 0
-                  ? "AM"
-                  : "PM"
-              }  - ${item.name}`}
-            </h3>
-          ))}
+          <div style={{ height: "450px" }}>
+            {data?.items.map((item) => (
+              <h3
+                key={item.id}
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  navigate(`/workouts/${item.id}`);
+                }}
+              >
+                {`${new Date(item.created_at).getHours() % 12 || 12}:${new Date(
+                  item.created_at
+                )
+                  .getMinutes()
+                  .toString()
+                  .padStart(2, "0")} ${
+                  Math.floor(new Date(item.created_at).getHours() / 12) == 0
+                    ? "AM"
+                    : "PM"
+                }  - ${item.name}`}
+              </h3>
+            ))}
+          </div>
         </Col>
       </Row>
       <Pagination>
