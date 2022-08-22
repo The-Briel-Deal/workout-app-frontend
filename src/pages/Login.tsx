@@ -22,10 +22,12 @@ export default () => {
     }
   };
   return (
-    <Container>
+    <Container
+      style={{ display: "flex", height: "100%", justifyContent: "center" }}
+    >
       <Row>
         <Col>
-          <Form style={{ paddingTop: "40%" }}>
+          <Form>
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Email address</Form.Label>
               <Form.Control
