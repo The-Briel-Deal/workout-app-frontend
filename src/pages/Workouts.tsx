@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, Pagination, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "react-query";
 import { trpc } from "../utils/trpc";
@@ -21,11 +21,11 @@ export default () => {
     "workout.getAll",
     { userId: userId ? userId : "", limit: 10, page: 0 },
   ]);
+  const [page, setPage] = useState(1);
   const [workoutName, setWorkoutName] = useState("");
   return (
     <Container>
       <Row>
-        {data?.pages}
         <Col>
           <h1>Workouts</h1>
           {data?.items.map((item) => (
@@ -40,6 +40,25 @@ export default () => {
           ))}
         </Col>
       </Row>
+      <Pagination>
+        {(() => {
+          const items = [];
+          for (let i = 1; i <= (data?.pages ? data?.pages : 0); i++) {
+            items.push(
+              <Pagination.Item
+                key={i}
+                active={page == i}
+                onClick={() => {
+                  setPage(i);
+                }}
+              >
+                {i}
+              </Pagination.Item>
+            );
+          }
+          return items;
+        })()}
+      </Pagination>
       <Row>
         <Col>
           <Form>
