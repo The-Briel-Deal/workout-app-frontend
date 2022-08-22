@@ -3,6 +3,7 @@ import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQueryClient } from "react-query";
 import { trpc } from "../utils/trpc";
+import { WorkoutSet } from "../../../workout-app-prisma/routes/set";
 
 export default () => {
   const utils = trpc.useContext();
@@ -34,9 +35,13 @@ export default () => {
       <Row>
         <Col>
           {sets
-            ? sets.map((set) => (
-                <h3>{`${set.Exercise.name} - ${set.weight_lb}ib x ${set.reps}`}</h3>
-              ))
+            ? sets
+                .sort((a, b) => {
+                  return a.Exercise.name.localeCompare(b.Exercise.name);
+                })
+                .map((set) => (
+                  <h3>{`${set.Exercise.name} - ${set.weight_lb}ib x ${set.reps}`}</h3>
+                ))
             : ""}
         </Col>
       </Row>
